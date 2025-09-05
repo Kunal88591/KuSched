@@ -76,10 +76,12 @@ Algorithms included: First Come First Serve (FCFS), Round Robin (RR), Shortest P
    cd KuSched
    ```
 2. Install g++ and make:
-```sudo apt-get install g++ make
+```bash
+sudo apt-get install g++ make
 ```
 3. Compile using:
-```make
+```bash
+make
 ```
 
 # Author
