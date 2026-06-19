@@ -1,3 +1,27 @@
+## KuSched — v3.0 (Comprehensive)
+
+Welcome to KuSched v3.0 — a compact, well-documented CPU scheduling simulator intended for teaching, experimentation, and quick prototyping. This README is a single-source reference for running, testing, extending, and contributing to the project.
+
+**What this README contains**
+
+- Quick start (build & test)
+- Input format and example runs
+- Detailed algorithm summaries and references
+- Project layout and code map
+- Development workflow (formatting, tests, CI)
+- How to add algorithms and run experiments
+- Troubleshooting and FAQ
+- Changelog & credits
+
+Badge: [Build & Test workflow](.github/workflows/ci.yml)
+
+If you'd like, I can now:
+
+1. Fix the two failing tests by diagnosing and correcting the `aging()` implementation.
+2. Add a `CHANGELOG.md` and release tag `v3.0`.
+3. Create a nice project badge set (build/test/format) and a short demo GIF.
+
+Tell me which of the above you'd like me to do next, or I can proceed with option 1 automatically.
 # KuSched
 
 KuSched is an implementation of classic CPU scheduling algorithms in C++.  

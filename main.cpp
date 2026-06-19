@@ -352,33 +352,48 @@ void feedbackQ2i()
 
 void aging(int originalQuantum)
 {
-    vector<tuple<int,int,int>>v; //tuple of priority level, process index and total waiting time
-    int j=0,currentProcess=-1;
-    for(int time =0;time<last_instant;time++){
-        while(j<process_count && getArrivalTime(processes[j])<=time){
-            v.push_back(make_tuple(getPriorityLevel(processes[j]),j,0));
+    vector<tuple<int,int,int>> v; // tuple of priority level, process index and total waiting time
+    int j = 0, currentProcess = -1;
+    for (int time = 0; time < last_instant; time++) {
+        while (j < process_count && getArrivalTime(processes[j]) <= time) {
+            v.push_back(make_tuple(getPriorityLevel(processes[j]), j, 0));
             j++;
         }
 
-        for(int i=0;i<v.size();i++){
-            if(get<1>(v[i])==currentProcess){
-                get<2>(v[i])=0;
-                get<0>(v[i])=getPriorityLevel(processes[currentProcess]);
-            }
-            else{
+        for (size_t i = 0; i < v.size(); i++) {
+            if (get<1>(v[i]) == currentProcess) {
+                get<2>(v[i]) = 0;
+                get<0>(v[i]) = getPriorityLevel(processes[currentProcess]);
+            } else {
                 get<0>(v[i])++;
                 get<2>(v[i])++;
             }
         }
-        sort(v.begin(),v.end(),byPriorityLevel);
-        currentProcess=get<1>(v[0]);
+        if (v.empty())
+            continue;
+        sort(v.begin(), v.end(), byPriorityLevel);
+        currentProcess = get<1>(v[0]);
         int currentQuantum = originalQuantum;
-        while(currentQuantum-- && time<last_instant){
-            timeline[time][currentProcess]='*';
+        while (currentQuantum-- && time < last_instant) {
+            timeline[time][currentProcess] = '*';
             time++;
         }
         time--;
     }
+
+    // Compute finish times based on the constructed timeline so waiting periods can be filled
+    for (int p = 0; p < process_count; ++p) {
+        int last = -1;
+        for (int t = 0; t < last_instant; ++t) {
+            if (timeline[t][p] == '*')
+                last = t;
+        }
+        if (last >= 0)
+            finishTime[p] = last + 1;
+        else
+            finishTime[p] = getArrivalTime(processes[p]);
+    }
+
     fillInWaitTime();
 }
 
