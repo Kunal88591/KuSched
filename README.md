@@ -70,22 +70,66 @@ Algorithms included: First Come First Serve (FCFS), Round Robin (RR), Shortest P
 
 ## Installation
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/Kunal88591/KuSched.git
-   cd KuSched
-   ```
-2. Install g++ and make:
+## KuSched — v2.0
+
+KuSched is a lightweight, educational CPU scheduling simulator (C++). This release marks v2.0: clearer docs, CI, a test harness, and better developer ergonomics.
+
+**Highlights (v2.0)**
+
+- Added `Makefile` targets: `make`, `make run`, `make test`, `make format`, `make clean`.
+- Added `scripts/run_tests.sh` to run and diff all `testcases/` automatically.
+- Added GitHub Actions CI to build and run tests on push/PR.
+- Improved README with a workflow diagram and a concise "What's New" section.
+
+**Quick Start**
+
 ```bash
-sudo apt-get install g++ make
-```
-3. Compile using:
-```bash
-make
+make        # build kusched
+make run    # run the simulator interactively
+make test   # run automated testcases
 ```
 
-# Author
+## Overview
 
-Kunal Meena  
-GitHub: [Kunal88591](https://github.com/Kunal88591)  
-Email: [kunalmeena1311@gmail.com](mailto:kunalmeena1311@gmail.com)
+The simulator reads a short input describing the operation mode (trace/stats), algorithms to run, simulation horizon, and process list. It executes multiple scheduling algorithms and prints timelines or statistics.
+
+```mermaid
+graph LR
+  Input[Input file] --> Parse[parse()]
+  Parse --> Sim[Simulation loop]
+  Sim -->|algorithms[]| Algorithms[Algorithm implementations]
+  Algorithms --> Timeline[Timeline / Stats]
+  Timeline --> Output[Console / Test runner]
+  Output --> Tests[scripts/run_tests.sh]
+```
+
+## What's New in v2.0
+
+- CI: [github workflow] builds and runs `make test` on push and PR.
+- Test runner: `scripts/run_tests.sh` automates running the binary against `testcases/` and diffs results.
+- Formatting: `make format` (uses `clang-format` if installed).
+- Makefile: clearer build targets and `run` shortcut.
+- Documentation: this README includes a flow diagram and upgrade notes.
+
+## What’s Best About KuSched
+
+- Educational: small, focused codebase with classic scheduling algorithms implemented plainly.
+- Reproducible: automated tests and CI ensure results don't regress.
+- Extensible: add new algorithms by implementing a function and registering it in `parser.h` / `main.cpp`.
+
+## Changelog (v2.0)
+
+- 2026-06-19 — v2.0
+  - Added CI workflow (.github/workflows/ci.yml)
+  - Added `make test` target and `scripts/run_tests.sh`
+  - Improved `Makefile` targets (`run`, `format`, `clean`)
+  - Updated README with flow diagram and "What's New" summary
+
+## Developer notes
+
+- Input format: first line `operation` (trace|stats), second line algorithm list (e.g. `8-1` or `2-4,3-`), then `last_instant` and `process_count`, followed by `process_count` lines `Name,arrival,service`.
+- To add an algorithm: implement the scheduling routine (e.g., `void myAlgo()`), update `execute_algorithm()` in `main.cpp`, and add a label in `ALGORITHMS`.
+
+## Author
+
+Kunal Meena — v2.0
