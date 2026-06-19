@@ -352,46 +352,64 @@ void feedbackQ2i()
 
 void aging(int originalQuantum)
 {
-    vector<tuple<int,int,int>> v; // tuple of priority level, process index and total waiting time
+    vector<tuple<int,int,int>> v; // tuple of priority level, process index, and waiting time
+    unordered_map<int,int> remainingServiceTime;
     int j = 0, currentProcess = -1;
+    
     for (int time = 0; time < last_instant; time++) {
+        // Add newly arrived processes
         while (j < process_count && getArrivalTime(processes[j]) <= time) {
-            v.push_back(make_tuple(getPriorityLevel(processes[j]), j, 0));
+            v.push_back(make_tuple(0, j, 0));
+            remainingServiceTime[j] = getServiceTime(processes[j]);
             j++;
         }
 
+        // Update aging: increment priority of waiting processes, reset running process
         for (size_t i = 0; i < v.size(); i++) {
-            if (get<1>(v[i]) == currentProcess) {
+            int processIndex = get<1>(v[i]);
+            if (processIndex == currentProcess) {
                 get<2>(v[i]) = 0;
-                get<0>(v[i]) = getPriorityLevel(processes[currentProcess]);
-            } else {
+                get<0>(v[i]) = 0; // reset priority for running process
+            } else if (remainingServiceTime[processIndex] > 0) {
                 get<0>(v[i])++;
                 get<2>(v[i])++;
             }
         }
+
+        // Remove finished processes from the vector
+        vector<tuple<int,int,int>> newV;
+        for (size_t i = 0; i < v.size(); i++) {
+            int processIndex = get<1>(v[i]);
+            if (remainingServiceTime[processIndex] > 0) {
+                newV.push_back(v[i]);
+            }
+        }
+        v = newV;
+
         if (v.empty())
             continue;
+
+        // Sort by priority (descending = higher priority first)
         sort(v.begin(), v.end(), byPriorityLevel);
+        
+        // Run the highest priority process for one quantum
         currentProcess = get<1>(v[0]);
         int currentQuantum = originalQuantum;
         while (currentQuantum-- && time < last_instant) {
             timeline[time][currentProcess] = '*';
+            remainingServiceTime[currentProcess]--;
+            
+            // Record finish time when process completes
+            if (remainingServiceTime[currentProcess] == 0) {
+                finishTime[currentProcess] = time + 1;
+                int arrivalTime = getArrivalTime(processes[currentProcess]);
+                turnAroundTime[currentProcess] = finishTime[currentProcess] - arrivalTime;
+                normTurn[currentProcess] = (turnAroundTime[currentProcess] * 1.0 / getServiceTime(processes[currentProcess]));
+            }
+            
             time++;
         }
         time--;
-    }
-
-    // Compute finish times based on the constructed timeline so waiting periods can be filled
-    for (int p = 0; p < process_count; ++p) {
-        int last = -1;
-        for (int t = 0; t < last_instant; ++t) {
-            if (timeline[t][p] == '*')
-                last = t;
-        }
-        if (last >= 0)
-            finishTime[p] = last + 1;
-        else
-            finishTime[p] = getArrivalTime(processes[p]);
     }
 
     fillInWaitTime();
