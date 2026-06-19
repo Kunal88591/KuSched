@@ -1,4 +1,4 @@
-# KuSched v3.0 — CPU Scheduling Simulator
+# KuSched v3.0 - CPU Scheduling Simulator
 
 A comprehensive, production-ready scheduling simulator for learning and experimenting with OS scheduling algorithms.
 
@@ -87,14 +87,14 @@ E,8,2
 ```
 
 ### Part 1: Operation Mode
-- `trace` — Show timeline (when each process runs)
-- `stats` — Show aggregate statistics (finish time, turnaround, normalized turnaround)
+- `trace` - Show timeline (when each process runs)
+- `stats` - Show aggregate statistics (finish time, turnaround, normalized turnaround)
 
 ### Part 2: Algorithm Specification
 Format: `ID-Quantum` (Quantum is optional)
-- `1-` → FCFS (First Come First Serve)
-- `2-4` → RR with quantum=4 (Round Robin)
-- `8-1` → Aging with quantum=1
+- `1-` - FCFS (First Come First Serve)
+- `2-4` - RR with quantum=4 (Round Robin)
+- `8-1` - Aging with quantum=1
 
 ### Part 3: Simulation Horizon
 An integer representing total time units to simulate. In example: 20 time units.
@@ -156,11 +156,11 @@ NormTurn   | 1.00| 1.17| 2.25| 2.40| 6.00| 2.56|
 
 ## Scheduling Algorithms Explained
 
-### 1. FCFS (First Come First Serve) — ID: 1
+### 1. FCFS (First Come First Serve) - ID: 1
 
 Simplest algorithm: processes run in arrival order, no preemption.
 
-**Pros**: Easy to implement, fair in order  
+**Pros**: Easy to implement, fair in order
 **Cons**: Long jobs block short jobs (poor average turnaround)
 
 ```mermaid
@@ -178,11 +178,11 @@ graph LR
 
 ---
 
-### 2. RR (Round Robin) — ID: 2
+### 2. RR (Round Robin) - ID: 2
 
 Each process gets a **quantum** (time slice). After quantum expires, process goes to back of queue.
 
-**Pros**: Fair, good for interactive systems  
+**Pros**: Fair, good for interactive systems
 **Cons**: Many context switches, worse turnaround than optimal
 
 **Example with quantum=2:**
@@ -193,11 +193,11 @@ Each process gets a **quantum** (time slice). After quantum expires, process goe
 
 ---
 
-### 3. SPN (Shortest Process Next) — ID: 3
+### 3. SPN (Shortest Process Next) - ID: 3
 
 Always run the process with smallest remaining service time. Non-preemptive.
 
-**Pros**: Minimizes average turnaround time  
+**Pros**: Minimizes average turnaround time
 **Cons**: Can starve long processes (unfair)
 
 **Order for our example:**
@@ -209,27 +209,27 @@ Always run the process with smallest remaining service time. Non-preemptive.
 
 ---
 
-### 4. SRT (Shortest Remaining Time) — ID: 4
+### 4. SRT (Shortest Remaining Time) - ID: 4
 
 Preemptive version of SPN: if shorter job arrives, preempt current.
 
-**Pros**: Better average turnaround than RR  
+**Pros**: Better average turnaround than RR
 **Cons**: High overhead, unfair to long jobs
 
 ---
 
-### 5. HRRN (Highest Response Ratio Next) — ID: 5
+### 5. HRRN (Highest Response Ratio Next) - ID: 5
 
 Uses **response ratio** = (Wait time + Service time) / Service time
 
 Balances short and long jobs: long waits increase ratio, encouraging short processes.
 
-**Pros**: Good average turnaround, fairer than SPN  
+**Pros**: Good average turnaround, fairer than SPN
 **Cons**: Non-preemptive (requires full calculation at decision points)
 
 ---
 
-### 6. FB-1 (Feedback Queue Level 1) — ID: 6
+### 6. FB-1 (Feedback Queue Level 1) - ID: 6
 
 **Multi-level feedback queues:**
 - Level 1 (high priority): quantum = 1
@@ -238,12 +238,12 @@ Balances short and long jobs: long waits increase ratio, encouraging short proce
 
 Process demoted if quantum expires. Short jobs finish at level 1; long jobs demoted but eventually run.
 
-**Pros**: Short jobs get quick turnaround, prevents starvation  
+**Pros**: Short jobs get quick turnaround, prevents starvation
 **Cons**: Moderate complexity, context switch overhead
 
 ---
 
-### 7. FB-2i (Feedback Queue with Doubling) — ID: 7
+### 7. FB-2i (Feedback Queue with Doubling) - ID: 7
 
 Same as FB-1, but quantum **doubles** at each level:
 - Level 1: quantum = 1
@@ -251,12 +251,12 @@ Same as FB-1, but quantum **doubles** at each level:
 - Level 3: quantum = 4
 - Level 4: quantum = 8, etc.
 
-**Pros**: Fewer context switches than FB-1, still fair  
+**Pros**: Fewer context switches than FB-1, still fair
 **Cons**: Long jobs may get poor turnaround initially
 
 ---
 
-### 8. Aging — ID: 8
+### 8. Aging - ID: 8
 
 Prevents starvation by **increasing priority of waiting processes**.
 
@@ -266,7 +266,7 @@ Prevents starvation by **increasing priority of waiting processes**.
 - Running process priority resets to 0
 - Always run highest priority process
 
-**Pros**: Guarantees no starvation, simple idea  
+**Pros**: Guarantees no starvation, simple idea
 **Cons**: Requires tracking age/priority per process
 
 ---
@@ -371,25 +371,25 @@ make test
 ### main.cpp
 
 **Key Sections:**
-1. **Helper functions** (`sortByServiceTime`, `getProcessName`, etc.) — tuple accessors
-2. **Timeline helpers** (`clear_timeline`, `fillInWaitTime`) — grid management
-3. **Algorithm implementations** — 8 functions (fcfs, roundRobin, aging, etc.)
-4. **Print functions** (`printTimeline`, `printStats`) — output formatting
-5. **Main loop** — parses input, runs algorithms, prints results
+1. **Helper functions** (`sortByServiceTime`, `getProcessName`, etc.) - tuple accessors
+2. **Timeline helpers** (`clear_timeline`, `fillInWaitTime`) - grid management
+3. **Algorithm implementations** - 8 functions (fcfs, roundRobin, aging, etc.)
+4. **Print functions** (`printTimeline`, `printStats`) - output formatting
+5. **Main loop** - parses input, runs algorithms, prints results
 
 ### parser.h
 
 **Global Variables:**
-- `operation` — "trace" or "stats"
-- `algorithms[]` — vector of (id, quantum) pairs
-- `processes[]` — vector of (name, arrival, service) tuples
-- `timeline[][]` — 2D char grid
-- `finishTime[]`, `turnAroundTime[]`, `normTurn[]` — results
+- `operation` - "trace" or "stats"
+- `algorithms[]` - vector of (id, quantum) pairs
+- `processes[]` - vector of (name, arrival, service) tuples
+- `timeline[][]` - 2D char grid
+- `finishTime[]`, `turnAroundTime[]`, `normTurn[]` - results
 
 **Functions:**
-- `parse_algorithms()` — parses algorithm spec
-- `parse_processes()` — parses process list
-- `parse()` — main entry point, initializes globals
+- `parse_algorithms()` - parses algorithm spec
+- `parse_processes()` - parses process list
+- `parse()` - main entry point, initializes globals
 
 ---
 
@@ -486,7 +486,7 @@ For large simulations, reduce `last_instant` or `process_count`.
 
 ## Changelog & Versions
 
-### v3.0 (2026-06-19) — Current
+### v3.0 (2026-06-19) - Current
 
 ✅ **Status**: All 22 tests passing
 
